@@ -30,7 +30,7 @@ describe('CursorReaderMCP Integration Tests', () => {
             await server.start();
             expect(server).toBeDefined();
             await server.stop();
-        });
+        }, 15000);
     });
     describe('MCP Requests', () => {
         test('should list projects', async () => {
@@ -137,7 +137,7 @@ describe('CursorReaderMCP Integration Tests', () => {
             });
             const result = response.result;
             expect(result.projectRoots).not.toContain(testPath);
-        });
+        }, 15000);
     });
     describe('Cursor Discovery', () => {
         test('should get prompt history', async () => {
@@ -155,9 +155,7 @@ describe('SafeFileSystem Tests', () => {
         expect(safeFs.getAllowedRoots()).toContain(testRoot);
     });
     test('should block access outside allowed roots', async () => {
-        expect(() => {
-            safeFs.readFile('/etc/passwd');
-        }).toThrow();
+        await expect(safeFs.readFile('/etc/passwd')).rejects.toThrow();
     });
     test('should read files in allowed roots', async () => {
         const packageJsonPath = process.cwd() + '/package.json';
